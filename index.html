@@ -5,76 +5,149 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>민기의 데이트 신청 💌</title>
     <style>
+        /* 예쁜 폰트 불러오기 */
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+        
         body {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             height: 100vh; margin: 0; background: linear-gradient(135deg, #ffe6e6, #ffb3c6);
             font-family: 'Pretendard', sans-serif; overflow: hidden; color: #4a4a4a;
         }
+        
         .card {
             background: rgba(255, 255, 255, 0.95); padding: 40px; border-radius: 20px;
             box-shadow: 0 10px 30px rgba(255, 105, 135, 0.2); text-align: center;
             max-width: 400px; width: 85%; transition: all 0.5s;
+            position: relative; /* 버튼이 카드 위로 올라오게 하기 위함 */
+            z-index: 1;
         }
+        
         .step { display: none; animation: fadeIn 0.8s ease-in-out; }
         .step.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(15px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+        
         h1 { color: #ff4d6d; font-size: 24px; line-height: 1.6; margin-bottom: 30px; }
+        
+        /* 기본 버튼 디자인 */
         button {
             background: #ff4d6d; color: white; border: none; padding: 15px 35px;
             font-size: 18px; border-radius: 30px; cursor: pointer; font-weight: bold;
             box-shadow: 0 4px 15px rgba(255, 77, 109, 0.3); transition: 0.2s;
         }
         button:hover { background: #ff2a55; transform: translateY(-2px); }
+        
         input[type="date"] {
             padding: 12px; font-size: 18px; border: 2px solid #ffb3c6; border-radius: 10px;
             margin-bottom: 25px; outline: none; color: #ff4d6d; font-family: 'Pretendard', sans-serif; cursor: pointer;
         }
+        
         .final-image { width: 100%; max-width: 250px; border-radius: 15px; margin-top: 20px; }
+
+        /* 2단계: 네/싫어요 버튼 컨테이너 설정 */
+        .button-container {
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        #yesBtn { z-index: 2; }
+        
+        /* 싫어요 버튼 초기 디자인 및 움직임 속도 설정 */
+        #noBtn { 
+            background: #999; 
+            box-shadow: 0 4px 15px rgba(153, 153, 153, 0.3);
+            transition: top 0.2s ease-out, left 0.2s ease-out; /* 도망가는 속도 */
+        }
+        #noBtn:hover { background: #777; transform: none; }
     </style>
 </head>
 <body>
     <div class="card">
-        <!-- 1단계 -->
+        <!-- 1단계: 인사 -->
         <div id="step1" class="step active">
             <h1>💖<br>당신의 남자친구이자<br>미래의 남편인 민기에요<br>💖</h1>
             <button onclick="nextStep('step1', 'step2')">계속 🌸</button>
         </div>
 
-        <!-- 2단계 -->
+        <!-- 2단계: 데이트 신청 및 버튼 2개 -->
         <div id="step2" class="step">
             <h1>당신에게 데이트 신청을<br>하고 싶어요 🥺</h1>
             <input type="date" id="datePicker">
-            <br>
-            <button onclick="checkDateAndProceed()">다음 💌</button>
+            
+            <div class="button-container">
+                <button id="yesBtn" onclick="checkDateAndProceed()">네 💖</button>
+                <!-- 마우스를 올리거나(onmouseover), 터치할 때(ontouchstart) 도망가는 이벤트 추가 -->
+                <button id="noBtn" onmouseover="moveNo(event)" ontouchstart="moveNo(event)" onclick="moveNo(event)">싫어요 😢</button>
+            </div>
         </div>
 
-        <!-- 3단계 (마지막 화면) -->
+        <!-- 3단계: 사진과 함께 수락 완료 화면 -->
         <div id="step3" class="step">
             <h1 id="finalMessage">와 정말 감사해요!<br>이날 데이트 좋은 시간 보내요 💖</h1>
             
-            <!-- 올려주신 이미지가 나오는 부분입니다! -->
+            <!-- 올려두신 이미지가 뜹니다 -->
             <img src="./images.jpg" alt="따룽해엥" class="final-image">
             
         </div>
     </div>
 
     <script>
+        // 과거 날짜는 선택 못하게 막기
         const dateInput = document.getElementById('datePicker');
         const today = new Date().toISOString().split('T')[0];
         dateInput.setAttribute('min', today);
 
+        // --- 싫어요 버튼 도망가기 기능 ---
+        const noBtn = document.getElementById('noBtn');
+        let isFirstMove = true;
+
+        function moveNo(e) {
+            // 모바일에서 터치했을 때 기본 클릭 이벤트가 겹치지 않게 막아줌
+            if(e) e.preventDefault(); 
+            
+            // 처음 도망갈 때 화면 전체를 돌아다닐 수 있도록 속성을 변경
+            if(isFirstMove) {
+                noBtn.style.position = 'fixed';
+                isFirstMove = false;
+            }
+            
+            const btnWidth = noBtn.offsetWidth;
+            const btnHeight = noBtn.offsetHeight;
+            
+            // 버튼이 화면 밖으로 사라지지 않게 화면 크기 안에서만 계산
+            const maxX = window.innerWidth - btnWidth - 20;
+            const maxY = window.innerHeight - btnHeight - 20;
+            
+            // 화면 내 랜덤 위치 생성
+            const randomX = Math.max(20, Math.floor(Math.random() * maxX));
+            const randomY = Math.max(20, Math.floor(Math.random() * maxY));
+            
+            // 버튼을 새로운 랜덤 위치로 날려버림
+            noBtn.style.left = randomX + 'px';
+            noBtn.style.top = randomY + 'px';
+        }
+
+        // --- 단계별 화면 넘기기 ---
         function nextStep(currentId, nextId) {
             document.getElementById(currentId).classList.remove('active');
             document.getElementById(nextId).classList.add('active');
         }
 
+        // --- 날짜 확인 및 최종 화면으로 넘어가기 ---
         function checkDateAndProceed() {
             const selectedDate = document.getElementById('datePicker').value;
+            
             if (!selectedDate) {
                 alert("데이트 날짜를 선택해 주세요! 🥺");
                 return;
             }
+            
             const dateObj = new Date(selectedDate);
             const month = dateObj.getMonth() + 1;
             const day = dateObj.getDate();
