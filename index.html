@@ -5,97 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>민기의 데이트 신청 💌</title>
     <style>
-        /* 예쁜 폰트 불러오기 */
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
-        
         body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            /* 배경색을 예쁜 핑크빛 그라데이션으로 변경 */
-            background: linear-gradient(135deg, #ffe6e6, #ffb3c6);
-            font-family: 'Pretendard', sans-serif;
-            overflow: hidden;
-            color: #4a4a4a;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            height: 100vh; margin: 0; background: linear-gradient(135deg, #ffe6e6, #ffb3c6);
+            font-family: 'Pretendard', sans-serif; overflow: hidden; color: #4a4a4a;
         }
-        /* 내용을 담는 하얀색 카드 디자인 */
         .card {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(255, 105, 135, 0.2);
-            text-align: center;
-            max-width: 400px;
-            width: 85%;
-            transition: all 0.5s;
+            background: rgba(255, 255, 255, 0.95); padding: 40px; border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(255, 105, 135, 0.2); text-align: center;
+            max-width: 400px; width: 85%; transition: all 0.5s;
         }
-        /* 각 화면(단계) 숨기기/보이기 및 애니메이션 */
-        .step {
-            display: none;
-            animation: fadeIn 0.8s ease-in-out;
-        }
-        .step.active {
-            display: block;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        h1 {
-            color: #ff4d6d;
-            font-size: 24px;
-            line-height: 1.6;
-            margin-bottom: 30px;
-        }
-        /* 버튼 예쁘게 꾸미기 */
+        .step { display: none; animation: fadeIn 0.8s ease-in-out; }
+        .step.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        h1 { color: #ff4d6d; font-size: 24px; line-height: 1.6; margin-bottom: 30px; }
         button {
-            background: #ff4d6d;
-            color: white;
-            border: none;
-            padding: 15px 35px;
-            font-size: 18px;
-            border-radius: 30px;
-            cursor: pointer;
-            font-weight: bold;
-            box-shadow: 0 4px 15px rgba(255, 77, 109, 0.3);
-            transition: 0.2s;
+            background: #ff4d6d; color: white; border: none; padding: 15px 35px;
+            font-size: 18px; border-radius: 30px; cursor: pointer; font-weight: bold;
+            box-shadow: 0 4px 15px rgba(255, 77, 109, 0.3); transition: 0.2s;
         }
-        button:hover {
-            background: #ff2a55;
-            transform: translateY(-2px);
-        }
-        /* 달력(날짜 선택) 디자인 */
+        button:hover { background: #ff2a55; transform: translateY(-2px); }
         input[type="date"] {
-            padding: 12px;
-            font-size: 18px;
-            border: 2px solid #ffb3c6;
-            border-radius: 10px;
-            margin-bottom: 25px;
-            outline: none;
-            color: #ff4d6d;
-            font-family: 'Pretendard', sans-serif;
-            cursor: pointer;
+            padding: 12px; font-size: 18px; border: 2px solid #ffb3c6; border-radius: 10px;
+            margin-bottom: 25px; outline: none; color: #ff4d6d; font-family: 'Pretendard', sans-serif; cursor: pointer;
         }
-        .gif-container img {
-            width: 100%;
-            border-radius: 15px;
-            margin-top: 20px;
-        }
+        .final-image { width: 100%; max-width: 250px; border-radius: 15px; margin-top: 20px; }
     </style>
 </head>
 <body>
-
     <div class="card">
-        <!-- 첫 번째 화면 -->
+        <!-- 1단계 -->
         <div id="step1" class="step active">
             <h1>💖<br>당신의 남자친구이자<br>미래의 남편인 민기에요<br>💖</h1>
             <button onclick="nextStep('step1', 'step2')">계속 🌸</button>
         </div>
 
-        <!-- 두 번째 화면 -->
+        <!-- 2단계 -->
         <div id="step2" class="step">
             <h1>당신에게 데이트 신청을<br>하고 싶어요 🥺</h1>
             <input type="date" id="datePicker">
@@ -103,47 +49,39 @@
             <button onclick="checkDateAndProceed()">다음 💌</button>
         </div>
 
-        <!-- 세 번째 화면 -->
+        <!-- 3단계 (마지막 화면) -->
         <div id="step3" class="step">
             <h1 id="finalMessage">와 정말 감사해요!<br>이날 데이트 좋은 시간 보내요 💖</h1>
-            <div class="gif-container">
-                <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMjQzZWEzOTQwM2Q2Y2JkMzE2MGRjZDc1ZTZlYmY1ZDc3ZmVhOGJjZCZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/MDJ9BlJzyyPju/giphy.gif" alt="행복한 짤">
-            </div>
+            
+            <!-- 올려주신 이미지가 나오는 부분입니다! -->
+            <img src="./images.jpg" alt="따룽해엥" class="final-image">
+            
         </div>
     </div>
 
     <script>
-        // 오늘 날짜 이전은 달력에서 선택하지 못하게 막는 코드
         const dateInput = document.getElementById('datePicker');
         const today = new Date().toISOString().split('T')[0];
         dateInput.setAttribute('min', today);
 
-        // 화면 넘기는 함수
         function nextStep(currentId, nextId) {
             document.getElementById(currentId).classList.remove('active');
             document.getElementById(nextId).classList.add('active');
         }
 
-        // 날짜를 선택했는지 확인하고 마지막 화면으로 넘기는 함수
         function checkDateAndProceed() {
             const selectedDate = document.getElementById('datePicker').value;
-            
-            // 날짜를 안 고르고 다음을 누르면 경고창 띄우기
             if (!selectedDate) {
                 alert("데이트 날짜를 선택해 주세요! 🥺");
                 return;
             }
-            
-            // 선택한 날짜에서 '월'과 '일'만 빼오기
             const dateObj = new Date(selectedDate);
             const month = dateObj.getMonth() + 1;
             const day = dateObj.getDate();
             
-            // 마지막 화면 멘트에 선택한 날짜 넣어서 보여주기
             document.getElementById('finalMessage').innerHTML = 
                 `와 정말 감사해요!<br><b style="color:#ff2a55;">${month}월 ${day}일</b> 데이트<br>좋은 시간 보내요 💖`;
             
-            // 3단계로 이동
             nextStep('step2', 'step3');
         }
     </script>
